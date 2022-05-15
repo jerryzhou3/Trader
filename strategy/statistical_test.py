@@ -10,7 +10,7 @@ import numpy as np
 from scipy import stats
 
 
-def ttest(profit_pct, null_expectation=0):
+def ttest(profit_pct, null_expectation=0, logger=print):
     """
     对策略收益进行t检验
     :param profit_pct: 策略收益率
@@ -22,13 +22,13 @@ def ttest(profit_pct, null_expectation=0):
     t, p = stats.ttest_1samp(profit_pct, null_expectation, nan_policy='omit')
     # 判断是否与理论均值有显著性差异:α=0.05
     p_value = p / 2  # 获取单边p值
-    print("t-value:", t)
-    print("p-value:", p_value)
-    print(f"是否可以拒绝[H0]收益均值={null_expectation}：", p_value < 0.05)
+    logger("t-value:", t)
+    logger("p-value:", p_value)
+    logger(f"是否可以拒绝[H0]收益均值={null_expectation}：", p_value < 0.05)
     return t, p_value
 
 
-def calculate_winning_rate(data) -> float:
+def calculate_winning_rate(data, logger=print) -> float:
     """
     计算策略胜率
     :param data: 股票数据，包含 profit_pct 列
@@ -42,5 +42,5 @@ def calculate_winning_rate(data) -> float:
         winning_rate = -1
     else:
         winning_rate = win_count / (win_count + lose_count)
-    print(f"胜率={winning_rate}")
+    logger(f"胜率：{winning_rate}")
     return winning_rate

@@ -7,8 +7,11 @@
 @Describe: 布林道策略
 """
 
-from base import *
-from statistical_test import *
+from data.stock import *
+from strategy.base import *
+from strategy.statistical_test import *
+from tqdm import tqdm
+from codetiming import Timer
 import matplotlib.pyplot as plt
 
 
@@ -34,23 +37,24 @@ def bollinger_bands(data: pd.DataFrame, window=20, k_std=2):
 
 
 if __name__ == "__main__":
-    code_list = ["000001.XSHE", "002466.XSHE", "002460.XSHE", "000762.XSHE"]
-    for code in code_list:
-        print("-----------------------")
-        print(f"{code}")
-        data = import_data_wrapper(code, start_date="2022-01-01")
-        data = bollinger_bands(data)
-        data = calculate_profit_pct(data)
-        data = calculate_cum_profit(data)
-        valid_trading_count = len(data)
-        print(f"有效交易次数：{valid_trading_count}")
-        if valid_trading_count > 0:
-            print(f"累积收益率：{data['cum_profit_pct'].iloc[-1]}")
-            profit_pct = data["profit_pct"]
-            t, p = ttest(profit_pct)
-            winning_rate = calculate_winning_rate(data)
-            data[["profit_pct", "cum_profit_pct"]].plot()
-            plt.plot(data.index, [0] * len(data))
-            plt.show()
-            plt.clf()
-        print("-----------------------")
+    code_list = get_local_stock_list()
+    with Timer(text=f"{len(code_list)} stocks " + "running time: {:0.4f} seconds"):
+        for code in tqdm(code_list):
+            print("-----------------------")
+            print(f"{code}")
+            data = import_data_wrapper(code, start_date="2020-01-01")
+            data = bollinger_bands(data)
+            data = calculate_profit_pct(data)
+            data = calculate_cum_profit(data)
+            valid_trading_count = len(data)
+            print(f"有效交易次数：{valid_trading_count}")
+            if valid_trading_count > 0:
+                print(f"累积收益率：{data['cum_profit_pct'].iloc[-1]}")
+                profit_pct = data["profit_pct"]
+                t, p = ttest(profit_pct)
+                winning_rate = calculate_winning_rate(data)
+                data[["profit_pct", "cum_profit_pct"]].plot()
+                # plt.plot(data.index, [0] * len(data))
+                # plt.show()
+                # plt.clf()
+            print("-----------------------")

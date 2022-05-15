@@ -3,9 +3,20 @@ import pandas as pd
 import datetime
 import os
 
-auth("13668130088", "Zyj-1998323")
+auth_flag = False
 
 
+def auth_check(func):
+    def _wrapper(*args, **kwargs):
+        global auth_flag
+        if not auth_flag:
+            auth("13668130088", "Zyj-1998323")
+        res = func(*args, **kwargs)
+        return res
+    return _wrapper
+
+
+@auth_check
 def get_stock_list():
     """
     获取所有A股股票列表，上交所.XSHG，深交所.XSHE
@@ -15,6 +26,15 @@ def get_stock_list():
     return stock_list
 
 
+def get_local_stock_list():
+    file_root = os.path.join(os.path.dirname(__file__), "price")
+    stock_list = []
+    for file in os.listdir(file_root):
+        stock_list.append(file.strip(".csv"))
+    return stock_list
+
+
+@auth_check
 def get_index_list(index_symbol='000300.XSHG'):
     """
     获取指数成分股，指数代码查询：https://www.joinquant.com/indexData
@@ -25,6 +45,7 @@ def get_index_list(index_symbol='000300.XSHG'):
     return stocks
 
 
+@auth_check
 def get_single_price(code, frequency, start_date=None, end_date=None, export=False):
     """
     获取单个股票行情数据
@@ -111,6 +132,7 @@ def transfer_price_frequency(data, frequency):
     return trans
 
 
+@auth_check
 def get_single_finance(code, date=None, statDate=None):
     """
     获取单个股票财务指标
@@ -123,6 +145,7 @@ def get_single_finance(code, date=None, statDate=None):
     return data
 
 
+@auth_check
 def get_single_valuation(code, date=None, statDate=None):
     """
     获取单个股票估值指标
@@ -145,6 +168,7 @@ def calculate_change_percent(data):
     return data
 
 
+@auth_check
 def update_daily_price(code, type='price', local=True):
     """
     更新单个股票行情数据
@@ -163,4 +187,4 @@ def update_daily_price(code, type='price', local=True):
     elif not local:
         data = get_single_price(code, "daily")
         export_data(data, code, "price")
-        print(f"股票数据已更新： {code}")
+        print(f"股票数据已更新：{code}")

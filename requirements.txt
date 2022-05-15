@@ -1,5 +1,8 @@
-jqdatasdk~=1.8.10
-pandas~=1.4.2
-tqdm~=4.64.0
-numpy~=1.22.3
-matplotlib~=3.5.2
+jqdatasdk
+pandas
+tqdm
+numpy
+matplotlib
+codetiming
+scipy
+celery
