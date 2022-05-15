@@ -22,4 +22,5 @@ def init_daily_price_database():
 
 
 if __name__ == "__main__":
-    update_daily_price_database(local=True)
+    # update_daily_price_database(local=True)
+    init_daily_price_database()

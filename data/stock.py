@@ -15,6 +15,16 @@ def get_stock_list():
     return stock_list
 
 
+def get_index_list(index_symbol='000300.XSHG'):
+    """
+    获取指数成分股，指数代码查询：https://www.joinquant.com/indexData
+    :param index_symbol: 指数的代码，默认沪深300
+    :return: list，成分股代码
+    """
+    stocks = get_index_stocks(index_symbol)
+    return stocks
+
+
 def get_single_price(code, frequency, start_date=None, end_date=None, export=False):
     """
     获取单个股票行情数据
@@ -145,9 +155,11 @@ def update_daily_price(code, type='price', local=True):
     file_path = get_data_path(code, type)
     if os.path.exists(file_path):
         start_date = pd.read_csv(file_path, usecols=["date"])["date"].iloc[-1]
-        data = get_single_price(code, "daily", start_date, datetime.datetime.today())
-        export_data(data, code, "price")
-        print(f"股票数据已更新： {code}")
+        today = datetime.datetime.today().strftime("%Y-%m-%d")
+        if today > start_date:
+            data = get_single_price(code, "daily", start_date, today)
+            export_data(data, code, "price")
+            print(f"股票数据已更新： {code}")
     elif not local:
         data = get_single_price(code, "daily")
         export_data(data, code, "price")

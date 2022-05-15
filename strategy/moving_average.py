@@ -8,10 +8,11 @@
 """
 
 from base import *
+from statistical_test import *
 import matplotlib.pyplot as plt
 
 
-def ma_strategy(data: pd.DataFrame, short_window: int = 5, long_window: int = 10) -> pd.DataFrame:
+def ma_strategy(data: pd.DataFrame, short_window: int = 5, long_window: int = 20) -> pd.DataFrame:
     """
     双均线策略
     :param data: 行情数据，包含 close 列
@@ -39,5 +40,10 @@ if __name__ == "__main__":
         data = ma_strategy(data)
         data = calculate_profit_pct(data)
         data = calculate_cum_profit(data)
+        profit_pct = data["profit_pct"]
+        t, p = ttest(profit_pct)
         winning_rate = calculate_winning_rate(data)
-        print(f"{code} winning rate: {winning_rate}")
+        data[["profit_pct", "cum_profit_pct"]].plot()
+        plt.plot(data.index, [0] * len(data))
+        plt.show()
+        plt.clf()

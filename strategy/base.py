@@ -37,19 +37,8 @@ def calculate_cum_profit(data: pd.DataFrame) -> pd.DataFrame:
     :return: data
     """
     data["cum_profit_pct"] = (data["profit_pct"] + 1).cumprod() - 1
+    data.dropna(inplace=True)
     return data
-
-
-def calculate_winning_rate(data: pd.DataFrame) -> float:
-    """
-    计算策略胜率
-    :param data: 股票数据，包含 profit_pct 列
-    :return:
-    """
-    temp = data["profit_pct"]
-    win_count = temp[temp >= 0].count()
-    lose_count = temp[temp < 0].count()
-    return win_count / (win_count + lose_count)
 
 
 def calculate_max_drawdown(data: pd.DataFrame, window: int = 252) -> pd.DataFrame:
