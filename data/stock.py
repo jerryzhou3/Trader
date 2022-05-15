@@ -10,7 +10,7 @@ def auth_check(func):
     def _wrapper(*args, **kwargs):
         global auth_flag
         if not auth_flag:
-            auth("13668130088", "Zyj-1998323")
+            auth(os.getenv("JQUSERNAME"), os.getenv("JQPASSWORD"))
         res = func(*args, **kwargs)
         return res
     return _wrapper
