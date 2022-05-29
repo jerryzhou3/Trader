@@ -15,7 +15,7 @@ from codetiming import Timer
 import matplotlib.pyplot as plt
 
 
-def bollinger_bands(data: pd.DataFrame, window=20, k_std=2):
+def bollinger_bands(data, window=20, k_std=2):
     """
     布林道策略
     Reference: https://www.investopedia.com/terms/b/bollingerbands.asp
@@ -33,6 +33,7 @@ def bollinger_bands(data: pd.DataFrame, window=20, k_std=2):
     data = reduce_signal(data)
     data.drop(columns=["buy_signal", "sell_signal"], inplace=True)
     data = data[data["signal"] != 0]
+    print(data[["signal"]])
     return data
 
 

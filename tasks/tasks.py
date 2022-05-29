@@ -19,7 +19,7 @@ strategy_dict = {"boll": bollinger_bands, "ma": ma_strategy}
 
 
 @app.task
-def simulate_strategy(strategy: str, code, start_date=None, end_date=None):
+def evaluate_strategy(strategy: str, code, start_date=None, end_date=None):
     output = StringBuilder()
     output.append("------------------------------")
     output.append(f"股票代码：{code}")
@@ -42,5 +42,5 @@ def simulate_strategy(strategy: str, code, start_date=None, end_date=None):
 
 
 if __name__ == "__main__":
-    output = simulate_strategy("boll", "000001.XSHE", "2020-01-01")
+    output = evaluate_strategy("boll", "603260.XSHG", "2022-01-01")
     print(output)

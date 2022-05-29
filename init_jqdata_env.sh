@@ -1,2 +1,2 @@
-export JQUSERNAME="$1"
-export JQPASSWORD="$2"
+export JQUSERNAME="$1";
+export JQPASSWORD="$2";
